@@ -7,9 +7,8 @@ import projectppin.ppin.Repository.CompanyRepository;
 import projectppin.ppin.Repository.EmployeeRepository;
 import projectppin.ppin.domain.CompanyList;
 import projectppin.ppin.domain.EmployeeList;
+import projectppin.ppin.util.EmployeeIDGenerator;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +29,8 @@ public class EmployeeService {
         EmployeeList savedEmployee = employeeRepository.save(employee);
 
         // 자동 증가된 ID를 기반으로 사원 ID 생성
-        String generatedEmpID = generateEmployeeID(savedEmployee.getEnb(), employeeDTO.getCustomFourDigits());
-        savedEmployee.setEmpID(Long.parseLong(generatedEmpID));  // 생성된 사원 ID를 EmpID에 저장
+        String generatedEmpID = EmployeeIDGenerator.generateEmployeeID(savedEmployee.getEnb(), employeeDTO.getCustomFourDigits());
+        savedEmployee.setEmpID(generatedEmpID);  // 생성된 사원 ID를 EmpID에 저장
 
         // 나머지 정보 설정
         savedEmployee.setEmpPw(employeeDTO.getEmpPw());
@@ -40,34 +39,19 @@ public class EmployeeService {
         savedEmployee.setPhoneNum(employeeDTO.getPhoneNum());
         savedEmployee.setEmail(employeeDTO.getEmail());
         savedEmployee.setLoginErrCount(employeeDTO.getLoginErrCount());
-        savedEmployee.setDel_flag(employeeDTO.isDel_flag());
 
         // 회사 정보 설정
-        CompanyList company = companyRepository.findById(employeeDTO.getCompanyId()).orElse(null);
-        savedEmployee.setCompany(company);
+        if (employeeDTO.getCompanyId() != null) {
+            CompanyList company = companyRepository.findById(employeeDTO.getCompanyId()).orElse(null);
+            if (company != null) {
+                savedEmployee.setCompany(company);
+            }
+        }
 
-        // 최종적으로 사원 정보 저장
-        EmployeeList finalSavedEmployee = employeeRepository.save(savedEmployee);
+        // 사원을 다시 저장
+        employeeRepository.save(savedEmployee);
 
-        return convertToDTO(finalSavedEmployee);
-    }
-
-    // 사원 ID 생성 함수 (사용자가 입력한 4자리 숫자 사용)
-    private String generateEmployeeID(Long enb, String customFourDigits) {
-        // 1. 현재 연도 두 자리
-        String year = DateTimeFormatter.ofPattern("yy").format(LocalDateTime.now());
-
-        // 2. 현재 월 두 자리
-        String month = DateTimeFormatter.ofPattern("MM").format(LocalDateTime.now());
-
-        // 3. 고정된 4자리 숫자 (사용자가 입력한 값, 없으면 기본값 "1234")
-        String fixedNumber = (customFourDigits != null && !customFourDigits.isEmpty()) ? customFourDigits : "1234";
-
-        // 4. 자동 생성된 사원 ID (enb 값을 숫자로 그대로 사용)
-        String idWithoutZeros = enb.toString();  // 자동 증가된 사원 ID
-
-        // 5. 최종 사원 ID 생성: 연도 + 월 + 생성된 ID + 4자리 고정 숫자
-        return year + month + idWithoutZeros + fixedNumber;
+        return convertToDTO(savedEmployee);
     }
 
     // 엔티티를 DTO로 변환
@@ -110,6 +94,7 @@ public class EmployeeService {
         return false;
     }
 
+    // 모든 회사 조회
     public List<CompanyList> findAllCompanies() {
         return companyRepository.findAll();
     }

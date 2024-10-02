@@ -15,7 +15,8 @@ public class EmployeeList {
     @Id
     private Long Enb;
 
-    private Long EmpID;
+    @Column(name = "empID")
+    private String EmpID;
     private String EmpPw;
     private String Name;
     @Pattern(regexp = "^\\d{6}-\\d{7}$",

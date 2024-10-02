@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class EmployeeDTO {
 
     private Long enb;
-    private Long empID;
+    private String empID;
     private String empPw;
     private String name;
     private String resiNum;
