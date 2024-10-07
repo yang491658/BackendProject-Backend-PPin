@@ -16,7 +16,7 @@ public class CompanyList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Cnb;
 
-    private String Position;
-    private String Department;
-    private Long BaseSalary;
+    private String position;
+    private String department;
+    private Long baseSalary;
 }
