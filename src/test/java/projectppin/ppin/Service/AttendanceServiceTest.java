@@ -40,6 +40,9 @@ public class AttendanceServiceTest {
     public void testClockInLog() {
         String userId = "이제희";
 
+        // 출근 기록 호출하기 전에 시간을 미리 기록
+        LocalDateTime clockInTime = LocalDateTime.now();  // 이 시점에서 시간을 미리 설정
+
         // 출근 기록 호출
         attendanceService.clockIn(userId);
 
@@ -53,8 +56,8 @@ public class AttendanceServiceTest {
         if (!logs.isEmpty()) {
             DataLog log = logs.get(logs.size() - 1);  // 가장 최근 기록
 
-            // 포맷된 시간 비교
-            String expectedDate = "출근 기록: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            // 로그에서 날짜 부분 비교 (로그된 시간과 미리 기록된 시간이 일치하는지 확인)
+            String expectedDate = "출근 기록: " + clockInTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             assertEquals(expectedDate, log.getNewData(), "로그된 날짜가 예상과 일치하지 않습니다.");
 
             assertEquals("출근 기록이 저장되었습니다.", log.getComments());  // 코멘트 확인
@@ -66,6 +69,9 @@ public class AttendanceServiceTest {
     @DisplayName("퇴근 기록 로그 저장 여부 테스트")
     public void testClockOutLog() {
         String userId = "이제희";
+
+        // 퇴근 기록 호출하기 전에 시간을 미리 기록
+        LocalDateTime clockOutTime = LocalDateTime.now();  // 이 시점에서 시간을 미리 설정
 
         // 퇴근 기록 호출
         attendanceService.clockOut(userId);
@@ -80,8 +86,8 @@ public class AttendanceServiceTest {
         if (!logs.isEmpty()) {
             DataLog log = logs.get(logs.size() - 1);  // 가장 최근 기록
 
-            // 포맷된 시간 비교
-            String expectedDate = "퇴근 기록: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            // 로그에서 날짜 부분 비교 (로그된 시간과 미리 기록된 시간이 일치하는지 확인)
+            String expectedDate = "퇴근 기록: " + clockOutTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             assertEquals(expectedDate, log.getNewData(), "로그된 날짜가 예상과 일치하지 않습니다.");
 
             assertEquals("퇴근 기록이 저장되었습니다.", log.getComments());  // 코멘트 확인

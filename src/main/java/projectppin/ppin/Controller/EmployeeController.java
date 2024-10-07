@@ -16,11 +16,18 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    // 사원 추가 및 수정 API
-    @PostMapping("/save")
-    public ResponseEntity<EmployeeDTO> saveOrUpdateEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO savedEmployee = employeeService.saveOrUpdateEmployee(employeeDTO);
-        return ResponseEntity.ok(savedEmployee);
+    // 사원 추가 API
+    @PostMapping("/add")
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO createdEmployee = employeeService.addEmployee(employeeDTO);
+        return ResponseEntity.ok(createdEmployee);
+    }
+
+    // 사원 수정 API
+    @PutMapping("/update")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(employeeDTO);
+        return ResponseEntity.ok(updatedEmployee);
     }
 
     // 특정 사원 조회 API
