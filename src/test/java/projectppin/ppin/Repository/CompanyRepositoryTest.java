@@ -173,19 +173,19 @@ public class CompanyRepositoryTest {
     @DisplayName("CompanyList에 대한 수정이 DataLog에 기록되는지 확인")
     public void Test6() {
         // Given: Cnb2에 해당하는 기존 데이터를 조회
-        Optional<CompanyList> companyOpt = companyRepository.findById(3L);
+        Optional<CompanyList> companyOpt = companyRepository.findById(4L);
 
         // 테스트를 위해 데이터가 존재하는지 먼저 확인
-        assertTrue(companyOpt.isPresent(), "Cnb 3의 회사 데이터가 존재해야 합니다.");
+        assertTrue(companyOpt.isPresent(), "Cnb 4의 회사 데이터가 존재해야 합니다.");
 
         CompanyList company = companyOpt.get();
 
         // 원래 값을 확인
-        assertEquals("부서장", company.getPosition());
-        assertEquals(8000000L, company.getBaseSalary());
+        assertEquals("팀장", company.getPosition());
+        assertEquals(6000000L, company.getBaseSalary());
 
         // When: CompanyService.updateCompany를 사용하여 직책과 부서, 기준 봉급을 수정
-        companyService.updateCompany(company.getCnb(), "부서장", "인사기획", 7400000L);
+        companyService.updateCompany(company.getCnb(), "팀장", "인사기획", 6600000L);
 
         // Then: DataLog에서 "회사 수정" 액션 타입이 기록되었는지 확인
         List<DataLog> logs = dataLogRepository.findByActionType("회사 수정");
@@ -196,8 +196,8 @@ public class CompanyRepositoryTest {
         // 가장 최근 로그 확인
         if (!logs.isEmpty()) {
             DataLog log = logs.get(logs.size() - 1);  // 가장 최근 기록
-            assertEquals("기존 정보 - 직책: 부서장, 부서: 인사기획, 기준 봉급: 8000000", log.getOldData());  // 이전 값 확인
-            assertEquals("새로운 정보 - 직책: 부서장, 부서: 인사기획, 기준 봉급: 7400000", log.getNewData());  // 변경된 값 확인
+            assertEquals("기존 정보 - 직책: 팀장, 부서: 인사기획, 기준 봉급: 6000000", log.getOldData());  // 이전 값 확인
+            assertEquals("새로운 정보 - 직책: 팀장, 부서: 인사기획, 기준 봉급: 6600000", log.getNewData());  // 변경된 값 확인
             assertEquals("회사 정보 수정", log.getComments());  // 코멘트 확인
         }
     }
