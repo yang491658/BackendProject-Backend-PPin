@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DataLogRepository extends JpaRepository<DataLog, Long> {
-    List<DataLog> findByActionType(String 기준_봉급_수정);
+    List<DataLog> findByActionType(String 추가_수정);
 }
