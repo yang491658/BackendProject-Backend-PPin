@@ -16,7 +16,6 @@ import java.util.List;
 public class CompanyList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cnb;
 
     private String position;
