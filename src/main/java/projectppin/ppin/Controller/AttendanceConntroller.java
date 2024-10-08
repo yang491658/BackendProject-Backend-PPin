@@ -10,7 +10,6 @@ import projectppin.ppin.Service.AttendanceService;
 @RestController
 @RequestMapping("/api/attendance")
 public class AttendanceConntroller {
-
     @Autowired
     private AttendanceService attendanceService;
 

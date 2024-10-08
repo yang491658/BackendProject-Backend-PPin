@@ -7,7 +7,6 @@ import projectppin.ppin.Service.VacationService;
 @RestController
 @RequestMapping("/api/vacation")
 public class VacationController {
-
     @Autowired
     private VacationService vacationService;
 

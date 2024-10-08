@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDTO {
-
     private Long enb;
     private String empID;
     private String empPw;
@@ -20,6 +19,5 @@ public class EmployeeDTO {
     private boolean del_flag;
 
     private Long companyId;
-
     private String customFourDigits;
 }

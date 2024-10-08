@@ -19,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class DataLogRepositoryTest {
-
     @Autowired
     private CompanyService companyService;
-
     @Autowired
     private DataLogRepository dataLogRepository;
-
     @Autowired
     private CompanyRepository companyRepository;
 

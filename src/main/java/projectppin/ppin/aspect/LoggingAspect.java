@@ -1,23 +1,14 @@
 package projectppin.ppin.aspect;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import projectppin.ppin.DTO.DataLogDTO;
 import projectppin.ppin.Repository.CompanyRepository;
 import projectppin.ppin.Service.DataLogService;
-import projectppin.ppin.domain.CompanyList;
-
-import java.util.Optional;
 
 @Aspect
 @Component
 public class LoggingAspect {
-
     @Autowired
     private DataLogService dataLogService;
 

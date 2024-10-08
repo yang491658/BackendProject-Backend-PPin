@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "CompanyList")
 public class CompanyList {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Cnb;

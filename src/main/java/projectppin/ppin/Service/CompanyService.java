@@ -4,17 +4,15 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projectppin.ppin.DTO.DataLogDTO;
-import projectppin.ppin.domain.CompanyList;
 import projectppin.ppin.Repository.CompanyRepository;
+import projectppin.ppin.domain.CompanyList;
 
 import java.util.Optional;
 
 @Service
 public class CompanyService {
-
     @Autowired
     private CompanyRepository companyRepository;
-
     @Autowired
     private DataLogService dataLogService;
 
