@@ -3,6 +3,7 @@ package projectppin.ppin.Service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import projectppin.ppin.DTO.DataLogDTO;
 import projectppin.ppin.DTO.EmployeeDTO;
 import projectppin.ppin.Repository.CompanyRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class EmployeeService {
 
     @Autowired

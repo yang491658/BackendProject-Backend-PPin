@@ -5,7 +5,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -47,5 +49,23 @@ public class EmployeeDTO extends User {
         this.del_flag = del_flag;
         this.companyId = companyId;
         this.roleNames = roleNames;
+    }
+
+    public Map<String, Object> getClaims() {
+        Map<String, Object> dataMap = new HashMap<>();
+
+        dataMap.put("enb", enb);
+        dataMap.put("empID", enb);
+        dataMap.put("empPw", enb);
+        dataMap.put("name", enb);
+        dataMap.put("resiNum", enb);
+        dataMap.put("phoneNum", enb);
+        dataMap.put("email", enb);
+        dataMap.put("loginErrCount", enb);
+        dataMap.put("del_flag", enb);
+        dataMap.put("companyId", enb);
+        dataMap.put("roleNames", enb);
+
+        return dataMap;
     }
 }

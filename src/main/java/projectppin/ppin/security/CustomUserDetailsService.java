@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import projectppin.ppin.domain.CompanyList;
 import projectppin.ppin.domain.CompanyRole;
 import projectppin.ppin.domain.EmployeeList;
@@ -22,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@Transactional
 //public class CustomUserDetailsService implements UserDetailsService {
 //
 //    private final EmployeeRepository employeeRepository;
@@ -62,6 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 1. EmployeeList에서 empID로 사용자 조회
         EmployeeList employee = employeeRepository.findByEmpID(empID)
                 .orElseThrow(() -> new UsernameNotFoundException("Employee not found with empID: " + empID));
+        log.info("employee : " + employee);
 
         // 2. 해당 직원이 속한 회사의 권한(roles) 리스트 조회
         CompanyList company = employee.getCompany();
