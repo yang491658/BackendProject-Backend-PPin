@@ -8,16 +8,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import projectppin.ppin.DTO.EmployeeDTO;
 
+import projectppin.ppin.security.CustomUserDetails;
 import projectppin.ppin.util.JWTUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class JWTCheckFilter extends OncePerRequestFilter {
@@ -49,20 +53,17 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         log.info("------------------------JWTCheckFilter.......................");
 
         String authHeaderStr = request.getHeader("Authorization");
 
         try {
-            //Bearer accestoken...
-            String accessToken = authHeaderStr.substring(7);
+            String accessToken = authHeaderStr.substring(7); // "Bearer " 부분 제거
             Map<String, Object> claims = JWTUtil.validateToken(accessToken);
 
             log.info("JWT claims: " + claims);
 
-            //filterChain.doFilter(request, response); //이하 추가
-
+            // JWT에서 사용자 정보 가져오기
             Long enb = (Long) claims.get("enb");
             String empID = (String) claims.get("empID");
             String empPw = (String) claims.get("empPw");
@@ -75,21 +76,25 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Long companyId = (Long) claims.get("companyId");
             List<String> roleNames = (List<String>) claims.get("roleNames");
 
-            EmployeeDTO employeeDTO = new EmployeeDTO(enb, empID, empPw, name, resiNum, phoneNum, email, loginErrCount, del_flag.booleanValue(), companyId, roleNames);
+            // 권한 리스트를 GrantedAuthority 객체 리스트로 변환
+            List<GrantedAuthority> authorities = roleNames.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                    .collect(Collectors.toList());
 
-            log.info("-----------------------------------");
-            log.info(employeeDTO);
-            log.info(employeeDTO.getAuthorities());
+            // CustomUserDetails 생성
+            CustomUserDetails userDetails = new CustomUserDetails(empID, empPw, authorities);
 
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(employeeDTO, empPw, employeeDTO.getAuthorities());
+            // 인증 토큰 생성
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, empPw, userDetails.getAuthorities());
 
+            // SecurityContext에 인증 정보 설정
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
+            // 다음 필터로 요청 전달
             filterChain.doFilter(request, response);
 
-        }catch(Exception e){
-
+        } catch (Exception e) {
             log.error("JWT Check Error..............");
             log.error(e.getMessage());
 
@@ -100,7 +105,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             PrintWriter printWriter = response.getWriter();
             printWriter.println(msg);
             printWriter.close();
-
         }
     }
 }

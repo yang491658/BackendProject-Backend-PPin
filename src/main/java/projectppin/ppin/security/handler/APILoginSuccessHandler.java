@@ -8,10 +8,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import projectppin.ppin.DTO.EmployeeDTO;
+import projectppin.ppin.security.CustomUserDetails;
 import projectppin.ppin.util.JWTUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
@@ -24,9 +26,9 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info(authentication);
         log.info("-------------------------------------");
 
-        EmployeeDTO employeeDTO = (EmployeeDTO)authentication.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Map<String, Object> claims = employeeDTO.getClaims();
+        Map<String, Object> claims = new HashMap<>();
 
         String accessToken = JWTUtil.generateToken(claims, 10);
         String refreshToken = JWTUtil.generateToken(claims, 60*24);
