@@ -21,16 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // 실제 데이터베이스 사용
 public class EmployeeRepositoryTest {
-
     @Autowired
     private EmployeeRepository employeeRepository;
-
     @Autowired
     private CompanyRepository companyRepository;
-
     @Autowired
     private EmployeeService employeeService;
-
     @Autowired
     private DataLogRepository dataLogRepository;  // 로그 확인을 위한 레포지토리
 
@@ -43,7 +39,6 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void Test1() {
-
         EmployeeList employee = new EmployeeList();
         employee.setName("홍길동");
         employee.setPhoneNum("010-2323-2311");
@@ -73,7 +68,6 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void Test2() {
-
         EmployeeList employee = new EmployeeList();
         employee.setName("이동동");
         employee.setPhoneNum("010-3232-3232");
@@ -95,9 +89,9 @@ public class EmployeeRepositoryTest {
         EmployeeList savedEmployee = employeeRepository.save(employee);
 
     }
+
     @Test
     public void Test3() {
-
         EmployeeList employee = new EmployeeList();
         employee.setName("박학년");
         employee.setPhoneNum("010-4342-2277");

@@ -5,13 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectppin.ppin.DTO.CompanyDTO;
-import projectppin.ppin.domain.CompanyList;
 import projectppin.ppin.Service.CompanyService;
+import projectppin.ppin.domain.CompanyList;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-
     @Autowired
     private CompanyService companyService;
 

@@ -1,8 +1,8 @@
 package projectppin.ppin.Repository;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CompanyRepositoryTest {
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private DataLogRepository dataLogRepository;
+    @Autowired
+    private CompanyService companyService;
+
     @BeforeEach
     public void setUp() {
         // 임의의 사용자 인증 정보 설정
@@ -29,15 +36,6 @@ public class CompanyRepositoryTest {
                         List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
-    @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
-    private DataLogRepository dataLogRepository;
-
-    @Autowired
-    private CompanyService companyService;
 
     @Test
     @DisplayName("회사 저장 테스트")

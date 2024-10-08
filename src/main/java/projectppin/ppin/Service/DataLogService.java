@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Service
 public class DataLogService {
-
     @Autowired
     private DataLogRepository dataLogRepository;
 

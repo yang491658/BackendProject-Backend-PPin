@@ -1,7 +1,7 @@
 package projectppin.ppin.Repository;
 
-import projectppin.ppin.domain.CompanyList;
 import org.springframework.data.jpa.repository.JpaRepository;
+import projectppin.ppin.domain.CompanyList;
 
 public interface CompanyRepository extends JpaRepository<CompanyList, Long> {
 }

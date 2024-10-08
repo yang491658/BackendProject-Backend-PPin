@@ -1,6 +1,5 @@
 package projectppin.ppin.Service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projectppin.ppin.DTO.DataLogDTO;
@@ -10,11 +9,9 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class AttendanceService {
-
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private DataLogService dataLogService;
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // 출근 기록
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

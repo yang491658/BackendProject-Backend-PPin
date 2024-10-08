@@ -1,7 +1,6 @@
 package projectppin.ppin.DTO;
 
 public class DataLogDTO {
-
     private String actionType;
     private String entityType;
     private Integer entityId;
