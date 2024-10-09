@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import projectppin.ppin.Repository.CompanyRepository; // CompanyRepository 추가
 import projectppin.ppin.security.filter.JWTCheckFilter;
 import projectppin.ppin.security.handler.APILoginFailHandler;
 import projectppin.ppin.security.handler.APILoginSuccessHandler;
@@ -27,49 +28,48 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class CustomSecurityConfig {
 
+    private final CompanyRepository companyRepository; // CompanyRepository 주입
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public APILoginSuccessHandler apiLoginSuccessHandler() {
+        return new APILoginSuccessHandler(companyRepository); // APILoginSuccessHandler 빈 생성
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         log.info("---------------------security config---------------------------");
 
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
         });
 
-        http.sessionManagement(sessionConfig ->  sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.csrf(config -> config.disable());
 
         http.formLogin(config -> {
             config.loginPage("/api/member/login");
-            config.successHandler(new APILoginSuccessHandler());
+            config.successHandler(apiLoginSuccessHandler()); // 수정된 부분
             config.failureHandler(new APILoginFailHandler());
         });
 
-        http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class); //JWT체크
+        http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class); // JWT 체크
 
         http.exceptionHandling(config -> {
             config.accessDeniedHandler(new CustomAccessDeniedHandler());
         });
 
-
         return http.build();
     }
 
-
-
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
@@ -80,5 +80,4 @@ public class CustomSecurityConfig {
 
         return source;
     }
-
 }
