@@ -5,15 +5,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import projectppin.ppin.DTO.EmployeeDTO;
-
 import projectppin.ppin.security.CustomUserDetails;
 import projectppin.ppin.util.JWTUtil;
 
@@ -28,23 +25,21 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-
         // Preflight요청은 체크하지 않음
-        if(request.getMethod().equals("OPTIONS")){
+        if (request.getMethod().equals("OPTIONS")) {
             return true;
         }
 
         String path = request.getRequestURI();
-
         log.info("check uri.............." + path);
 
         //api/member/ 경로의 호출은 체크하지 않음
-        if(path.startsWith("/api/member/")) {
+        if (path.startsWith("/api/member/")) {
             return true;
         }
 
         //이미지 조회 경로는 체크하지 않는다면
-        if(path.startsWith("/api/products/view/")) {
+        if (path.startsWith("/api/products/view/")) {
             return true;
         }
 
@@ -81,8 +76,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .collect(Collectors.toList());
 
-            // CustomUserDetails 생성
-            CustomUserDetails userDetails = new CustomUserDetails(empID, empPw, authorities);
+            // CustomUserDetails 생성 시 companyId 추가
+            CustomUserDetails userDetails = new CustomUserDetails(empID, empPw, companyId, authorities);
 
             // 인증 토큰 생성
             UsernamePasswordAuthenticationToken authenticationToken =
