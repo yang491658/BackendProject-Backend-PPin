@@ -161,11 +161,11 @@ public class EmployeeService {
         );
     }
 
-    // 특정 사원 조회
-    public EmployeeDTO findEmployeeByEnb(Long enb) {
-        EmployeeList employee = employeeRepository.findById(enb).orElse(null);
-        return (employee != null) ? convertToDTO(employee) : null;
-    }
+//    // 특정 사원 조회
+//    public EmployeeDTO findEmployeeByEnb(Long enb) {
+//        EmployeeList employee = employeeRepository.findById(enb).orElse(null);
+//        return (employee != null) ? convertToDTO(employee) : null;
+//    }
 
     // 모든 사원 조회
     public List<EmployeeDTO> findAllEmployees() {
@@ -177,4 +177,20 @@ public class EmployeeService {
     public List<CompanyList> findAllCompanies() {
         return companyRepository.findAll();
     }
+
+
+    //20241010 최진석이 만들고 있는 코드
+    // 2024 지금 react에서 쓰고 있는 로직
+    // 해당 사원에 대한 정보만 employeeList에서 뽑아와주기
+    // 특정 사원 조회
+    // empID로 사원 조회
+    public EmployeeDTO findEmployeeByEnb(String empID) {
+        // empID로 사원 정보 조회
+        EmployeeList employee = employeeRepository.findByEmpID(empID)
+                .orElseThrow(() -> new EntityNotFoundException("해당 사원을 찾을 수 없습니다."));
+
+        // 조회된 EmployeeList 객체를 DTO로 변환하여 반환
+        return convertToDTO(employee);
+    }
+
 }
