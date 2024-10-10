@@ -1,8 +1,10 @@
 package projectppin.ppin.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import projectppin.ppin.DTO.CompanyDTO;
 import projectppin.ppin.DTO.EmployeeDTO;
 import projectppin.ppin.Service.EmployeeService;
 import projectppin.ppin.domain.CompanyList;
@@ -30,14 +32,15 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    // 특정 사원 조회 API
-    @GetMapping("/{enb}")
-    public ResponseEntity<EmployeeDTO> getEmployeeByEnb(@PathVariable Long enb) {
-        EmployeeDTO employeeDTO = employeeService.findEmployeeByEnb(enb);
-        return (employeeDTO != null) ? ResponseEntity.ok(employeeDTO) : ResponseEntity.notFound().build();
-    }
+//    // 특정 사원 조회 API
+//    @GetMapping("/{enb}")
+//    public ResponseEntity<EmployeeDTO> getEmployeeByEnb(@PathVariable Long enb) {
+//        EmployeeDTO employeeDTO = employeeService.findEmployeeByEnb(enb);
+//        return (employeeDTO != null) ? ResponseEntity.ok(employeeDTO) : ResponseEntity.notFound().build();
+//    }
 
     // 모든 사원 조회 API
+    // 2024 지금 react에서 쓰고 있는 로직
     @GetMapping("/all")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employees = employeeService.findAllEmployees();
@@ -52,9 +55,26 @@ public class EmployeeController {
     }
 
     // 모든 회사 정보 조회 API (회사 선택 시)
+    // 2024 지금 react에서 쓰고 있는 로직
     @GetMapping("/companies")
     public ResponseEntity<List<CompanyList>> getAllCompanies() {
         List<CompanyList> companies = employeeService.findAllCompanies();
         return ResponseEntity.ok(companies);
     }
+
+    //20241010부터 최진석이 만들고 있는 코드
+
+    // 2024 지금 react에서 쓰고 있는 로직
+    // 해당 사원에 대한 정보만 employeeList에서 뽑아와주기
+    @GetMapping("/{empID}")
+    public ResponseEntity<EmployeeDTO> getEmployeeByID(@PathVariable("empID") String empID) {
+        EmployeeDTO employee = employeeService.findEmployeeByEnb(empID);
+
+        if (employee == null) {
+            // 데이터가 없을 때 404 Not Found를 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(employee);
+    }
+
 }
