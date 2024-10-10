@@ -1,11 +1,11 @@
 package projectppin.ppin.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import projectppin.ppin.DTO.AttendanceDTO;
 import projectppin.ppin.Service.AttendanceService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/attendance")
@@ -24,5 +24,11 @@ public class AttendanceConntroller {
     @PostMapping("/clockout")
     public void clockOut(@RequestParam String userId) {
         attendanceService.clockOut(userId);
+    }
+
+    // 출퇴근 기록
+    @GetMapping("/all")
+    public List<AttendanceDTO> getAllAttendance() {
+        return attendanceService.getAllAttendance();
     }
 }
