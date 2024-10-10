@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import projectppin.ppin.DTO.AttendanceDTO;
 import projectppin.ppin.DTO.DataLogDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @Transactional
@@ -50,5 +52,11 @@ public class AttendanceService {
 
         // 로그 기록 호출
         dataLogService.logAction(dataLogDTO, userId);
+    }
+
+    // 모든 출퇴근 기록 가져오기
+    public List<AttendanceDTO> getAllAttendance() {
+        // 데이터베이스에서 모든 기록을 가져오는 로직을 구현합니다.
+        return dataLogService.findAllAttendanceRecords(); // 예시: DataLogService에서 메서드를 호출
     }
 }

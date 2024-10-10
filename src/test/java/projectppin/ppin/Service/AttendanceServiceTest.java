@@ -11,9 +11,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import projectppin.ppin.Repository.DataLogRepository;
 import projectppin.ppin.domain.DataLog;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -92,6 +96,105 @@ public class AttendanceServiceTest {
 
             assertEquals("퇴근 기록이 저장되었습니다.", log.getComments());  // 코멘트 확인
             assertEquals(userId, log.getUserId());  // 사용자 ID 확인
+        }
+    }
+
+    @Test
+    @DisplayName("근태관리용 임시 데이터")
+    public void temp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Random random = new Random();
+
+        int[] startDays = {20, 14, 7, 2}; // 각 사용자별 출근 시작일
+
+        for (int i = 0; i < startDays.length; i++) {
+            String userID = String.valueOf(i + 1);
+            int days = startDays[i];
+
+            for (int j = days; j >= 0; j--) {
+                LocalDate date = LocalDate.now().minusDays(j);
+
+                // 주말은 제외
+                if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    continue;
+                }
+
+                // 출근 시간 08:30 ~ 09:30 사이
+                LocalTime randomClockInTime = LocalTime.of(8, 30).plusMinutes(random.nextInt(61)); // 0 ~ 60분 추가
+                LocalDateTime clockInTime = date.atTime(randomClockInTime);
+
+                // 퇴근 시간 17:00 ~ 20:00 사이
+                LocalTime randomClockOutTime = LocalTime.of(17, 0).plusMinutes(random.nextInt(181)); // 0 ~ 180분 추가
+                LocalDateTime clockOutTime = date.atTime(randomClockOutTime);
+                // 출근 로그
+                String clockInComment = "출근 기록이 저장되었습니다.";
+                if (clockInTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
+                    clockInComment = "출근 기록이 저장되었습니다. / 지각";
+                }
+                if (i == 1 && j == 2) {
+                    String comment = "무단 결근 / " + clockInTime.toLocalDate();
+                    DataLog clockInLog = DataLog.builder()
+                            .entityId(0)
+                            .entityType("출근 기록")
+                            .actionType("기타")
+                            .comments(comment)
+                            .timestamp(clockInTime.toLocalDate().atStartOfDay())
+                            .userId(userID)
+                            .build();
+                    dataLogRepository.save(clockInLog);
+                } else {
+                    DataLog clockInLog = DataLog.builder()
+                            .entityId(0)
+                            .entityType("출근 기록")
+                            .actionType("출근")
+                            .comments(clockInComment)
+                            .newData("출근 기록: " + clockInTime.format(formatter))
+                            .timestamp(clockInTime)
+                            .userId(userID)
+                            .build();
+                    dataLogRepository.save(clockInLog);
+                }
+
+                // 퇴근 로그
+                String clockOutComment = "퇴근 기록이 저장되었습니다.";
+                if (clockOutTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
+                    clockOutComment = "퇴근 기록이 저장되었습니다. / 조퇴";
+                }
+                if (i == 0 && j == 6) {
+                    String comment = "퇴근 미체크 / " + clockOutTime.toLocalDate();
+                    DataLog clockInLog = DataLog.builder()
+                            .entityId(0)
+                            .entityType("퇴근 기록")
+                            .actionType("기타")
+                            .comments(comment)
+                            .timestamp(clockOutTime.toLocalDate().atStartOfDay())
+                            .userId(userID)
+                            .build();
+                    dataLogRepository.save(clockInLog);
+                } else if (i == 1 && j == 2) {
+                    String comment = "무단 결근 / " + clockInTime.toLocalDate();
+                    DataLog clockOutLog = DataLog.builder()
+                            .entityId(0)
+                            .entityType("퇴근 기록")
+                            .actionType("기타")
+                            .comments(comment)
+                            .timestamp(clockOutTime.toLocalDate().atStartOfDay())
+                            .userId(userID)
+                            .build();
+                    dataLogRepository.save(clockOutLog);
+                } else {
+                    DataLog clockOutLog = DataLog.builder()
+                            .entityId(0)
+                            .entityType("퇴근 기록")
+                            .actionType("퇴근")
+                            .comments(clockOutComment)
+                            .newData("퇴근 기록: " + clockOutTime.format(formatter))
+                            .timestamp(clockOutTime)
+                            .userId(userID)
+                            .build();
+                    dataLogRepository.save(clockOutLog);
+                }
+            }
         }
     }
 }
