@@ -4,9 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import projectppin.ppin.domain.DataLog;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public interface DataLogRepository extends JpaRepository<DataLog, Long> {
     List<DataLog> findByActionType(String 추가_수정);
+
+    List<DataLog> findByActionTypeIn(List<String> 출근);
 }

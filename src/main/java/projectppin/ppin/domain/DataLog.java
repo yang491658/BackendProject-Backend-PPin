@@ -1,14 +1,17 @@
 package projectppin.ppin.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+// 어노테이션 추가
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class DataLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
