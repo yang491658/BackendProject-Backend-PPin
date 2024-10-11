@@ -43,6 +43,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // 다운로드
+        if (path.startsWith("/api/documents/download/")) {
+            return true;
+        }
+
         return false;
     }
 
